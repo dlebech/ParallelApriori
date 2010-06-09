@@ -1,5 +1,8 @@
 package edu.uoregon.cs.apriori;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.*;
 
 import weka.associations.ItemSet;
@@ -21,7 +24,9 @@ public class RuleParser {
 	 * 		A FastVector[] containing association rules from an Apriori execution
 	 */
 	public static void addRules(FastVector[] rules) {
-		ruleSets.add(rules);
+		synchronized (ruleSets) {
+			ruleSets.add(rules);
+		}
 	}
 	
 	/**
@@ -121,9 +126,24 @@ public class RuleParser {
 		return res;
 	}
 	
-	public static void printRuleCounts() {
-		for (String s : ruleMatches.keySet()) {
-			System.out.println(ruleMatches.get(s) + ": " + s);
+	public static void printSummaryToFile() {
+		try {
+			PrintStream ps = new PrintStream("rulematches");
+			for (String s : ruleMatches.keySet()) {
+				ps.println(ruleMatches.get(s) + ": " + s);
+			}
+			ps.close();
+			ps = new PrintStream("rules");
+			for (FastVector[] fv : ruleSets) {
+				for (int i = 0; i < fv.length; i++) {
+					String st = toRuleString((ItemSet) fv[0].elementAt(i)) + "==>" + 
+								toRuleString((ItemSet) fv[1].elementAt(i));
+					ps.println(st);
+				}
+			}
+			ps.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 }

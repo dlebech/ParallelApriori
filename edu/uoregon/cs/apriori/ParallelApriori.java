@@ -104,7 +104,7 @@ public class ParallelApriori {
 		RuleParser.ruleMatcher();
 		
 		// Print the rules
-		RuleParser.printRuleCounts();
+		RuleParser.printSummaryToFile();
 	}
 	
 	/**
