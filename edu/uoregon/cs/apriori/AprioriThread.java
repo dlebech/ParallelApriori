@@ -23,8 +23,14 @@ public class AprioriThread implements Runnable {
 	 */
 	public void run() {
 		try {
+			// Run the Apriori algorithm
 			AssociatorEvaluation.evaluate(apriori, options);
+			
+			// Print rules as they finish and also store them in the RuleParser
 			System.out.println(apriori);
+			RuleParser.addAprioriRunSummary(apriori.toString());
+			
+			// Add the rules to the RuleParser
 			RuleParser.addRules(apriori.getAllTheRules());
 		} catch (Exception e) {
 			e.printStackTrace();

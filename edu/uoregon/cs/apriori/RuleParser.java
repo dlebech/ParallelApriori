@@ -1,6 +1,5 @@
 package edu.uoregon.cs.apriori;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.*;
@@ -13,6 +12,7 @@ public class RuleParser {
 	private static List<FastVector[]> ruleSets = new ArrayList<FastVector[]>();
 	private static Instances attributes = null;
 	private static LinkedHashMap<String,Integer> ruleMatches = new LinkedHashMap<String, Integer>();
+	private static String aprioriRunSummaries = "";
 	
 	public static void setAttributes(Instances attributes) {
 		RuleParser.attributes = attributes;
@@ -26,6 +26,12 @@ public class RuleParser {
 	public static void addRules(FastVector[] rules) {
 		synchronized (ruleSets) {
 			ruleSets.add(rules);
+		}
+	}
+	
+	public static void addAprioriRunSummary(String summary) {
+		synchronized (aprioriRunSummaries) {
+			aprioriRunSummaries += summary + "\n\n";
 		}
 	}
 	
@@ -134,13 +140,7 @@ public class RuleParser {
 			}
 			ps.close();
 			ps = new PrintStream("rules");
-			for (FastVector[] fv : ruleSets) {
-				for (int i = 0; i < fv.length; i++) {
-					String st = toRuleString((ItemSet) fv[0].elementAt(i)) + "==>" + 
-								toRuleString((ItemSet) fv[1].elementAt(i));
-					ps.println(st);
-				}
-			}
+			ps.print(aprioriRunSummaries);
 			ps.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
