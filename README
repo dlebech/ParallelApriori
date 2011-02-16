@@ -1,0 +1,5 @@
+The Apriori algorithm is a simple and popular algorithm for association rule
+mining.
+
+ParallelApriori speeds up the weka implementation of the Apriori algorithm by
+running the algorithm in parallel on several partitions of the original dataset.
